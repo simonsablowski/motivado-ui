@@ -28,13 +28,13 @@ class UserInterfaceController extends Controller {
 		print Json::format(Json::encode($data));
 	}
 	
-	public function query($method, $parameter) {
+	public function query($method) {
 		$this->setupApi();
 		$this->setupCoachingConfigurator();
 		
 		switch (strtolower($method)) {
 			case 'query':
-				return $this->getApi()->query($parameter);
+				return $this->getApi()->query($this->getRequest()->getData('CoachingKey'));
 			case 'extendcoachinghistory':
 				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $this->getRequest()->getData('CoachingKey'), $this->getRequest()->getData('ObjectId')));
 				return $this->output(array(
