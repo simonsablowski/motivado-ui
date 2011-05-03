@@ -38,11 +38,8 @@ class UserInterfaceController extends Controller {
 			case 'extendcoachinghistory':
 				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $this->getRequest()->getData('CoachingKey'), $this->getRequest()->getData('ObjectId')));
 				return $this->output(array(
-					'response' => array(
-						'status' => $this->localize('Success'),
-						'object' => array(
-							'id' => $this->getRequest()->getData('ObjectId')//TODO
-						)
+					'object' => array(
+						'id' => $this->getRequest()->getData('ObjectId')
 					)
 				));
 			case 'getinteractionresults':
@@ -57,11 +54,8 @@ class UserInterfaceController extends Controller {
 			case 'saveinteractionresults':
 				$this->getCoachingConfigurator()->setValues($this->getRequest()->getData('data'));
 				return $this->output(array(
-					'response' => array(
-						'status' => $this->localize('Success'),
-						'object' => array(
-							'id' => $this->getRequest()->getData('ObjectId')//TODO
-						)
+					'object' => array(
+						'id' => $this->getRequest()->getData('ObjectId')
 					)
 				));
 		}
