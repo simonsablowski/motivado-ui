@@ -24,7 +24,7 @@ class CoachingConfigurator extends Application {
 	
 	public function setValues($values) {
 		foreach ($values as $field => $value) {
-			$this->setValue($field, $value);
+			$this->setValue($field, (array)$value);
 		}
 		
 		return $this->getValues();
