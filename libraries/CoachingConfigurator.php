@@ -36,8 +36,8 @@ class CoachingConfigurator extends Application {
 		$UserInteraction = new UserInteraction(array(
 			'UserId' => $this->getUserId(),
 			'key' => $field,
-			'data' => $value['data'],
-			'value' => $value['value']
+			'data' => (string)$value['data'],
+			'value' => (string)$value['value']
 		));
 		return $UserInteraction->create();
 	}
