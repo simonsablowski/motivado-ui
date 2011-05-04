@@ -23,7 +23,7 @@ class CoachingConfigurator extends Application {
 	}
 	
 	public function setValues($values) {
-		foreach ($values as $field => $value) {
+		foreach ((array)$values as $field => $value) {
 			$this->setValue($field, (array)$value);
 		}
 		
