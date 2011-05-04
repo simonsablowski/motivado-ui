@@ -8,14 +8,15 @@ class UserInterfaceController extends Controller {
 		foreach ($this->getConfiguration('includeDirectories') as $includeDirectory) {
 			if (stripos($includeDirectory, 'api') !== FALSE) {
 				require_once $includeDirectory . 'configuration.php';
-				return $configuration;
+				return array_merge($configuration, array(
+					'ignoreSession' => TRUE
+				));
 			}
 		}
 	}
 	
 	protected function setupApi() {
 		$this->setApi(new Api($this->getApiConfiguration()));
-		$this->getApi()->setConfiguration('ignoreSession', TRUE);
 		$this->getApi()->setSession($this->getSession());
 	}
 	
