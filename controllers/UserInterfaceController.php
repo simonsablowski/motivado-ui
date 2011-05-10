@@ -47,8 +47,8 @@ class UserInterfaceController extends Controller {
 				$results = array();
 				foreach ($this->getCoachingConfigurator()->getValues() as $UserInteraction) {
 					$results[$UserInteraction->getKey()] = array(
-						'data' => $UserInteraction->getData('data'),
-						'value' => $UserInteraction->getValue()
+						'data' => Json::decode($UserInteraction->getData('data')),
+						'value' => Json::decode($UserInteraction->getValue())
 					);
 				}
 				return $this->output($results);

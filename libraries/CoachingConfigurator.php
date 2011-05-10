@@ -10,7 +10,7 @@ class CoachingConfigurator extends Application {
 	public function getValues() {
 		return UserInteraction::findAll(array(
 			'UserId' => $this->getUserId()
-		));
+		), array('created' => 'ascending'));
 	}
 	
 	public function getValue($field = NULL) {
