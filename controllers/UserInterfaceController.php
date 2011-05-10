@@ -41,7 +41,7 @@ class UserInterfaceController extends Controller {
 			case 'query':
 				return $this->getApi()->query($CoachingKey);
 			case 'extendcoachinghistory':
-				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $CoachingKey, $ObjectId)));
+				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $CoachingKey, $ObjectId));
 				return $this->output(array(
 					'object' => array(
 						'id' => $ObjectId
