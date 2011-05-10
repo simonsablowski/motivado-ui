@@ -16,10 +16,11 @@ class CoachingConfigurator extends Application {
 	public function getValue($field = NULL) {
 		if (is_null($field)) return $this->getValues();
 		
-		return UserInteraction::findFirst(array(
+		$UserInteraction = UserInteraction::findFirst(array(
 			'UserId' => $this->getUserId(),
 			'key' => $field
 		));
+		return $UserInteraction->getValue();
 	}
 	
 	public function setValues($values) {

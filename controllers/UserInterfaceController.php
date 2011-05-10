@@ -53,8 +53,7 @@ class UserInterfaceController extends Controller {
 				}
 				return $this->output($results);
 			case 'saveinteractionresults':
-				$data = Json::decode($this->getRequest()->getData('data'));
-				$this->getCoachingConfigurator()->setValues($data);
+				$this->getCoachingConfigurator()->setValues($this->getRequest()->getData('data'));
 				return $this->output(array(
 					'object' => array(
 						'id' => $this->getRequest()->getData('ObjectId')
