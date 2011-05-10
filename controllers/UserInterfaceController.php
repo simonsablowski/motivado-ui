@@ -22,7 +22,7 @@ class UserInterfaceController extends Controller {
 	
 	protected function setupCoachingConfigurator() {
 		$this->setCoachingConfigurator(new CoachingConfigurator);
-		$this->getCoachingConfigurator()->setUserId(1);
+		$this->getCoachingConfigurator()->UserId = 1;
 	}
 	
 	protected function output($data) {
@@ -30,34 +30,45 @@ class UserInterfaceController extends Controller {
 	}
 	
 	public function query($method) {
-		$this->setupApi();
 		$this->setupCoachingConfigurator();
+		$this->setupApi();
+		
+		$CoachingKey = $this->getRequest()->getData('CoachingKey');
+		$ObjectId = $this->getRequest()->getData('ObjectId');
+		$data = $this->getRequest()->getData('data');
 		
 		switch (strtolower($method)) {
 			case 'query':
-				return $this->getApi()->query($this->getRequest()->getData('CoachingKey'));
+				return $this->getApi()->query($CoachingKey);
 			case 'extendcoachinghistory':
-				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $this->getRequest()->getData('CoachingKey'), $this->getRequest()->getData('ObjectId')));
+				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $CoachingKey, $ObjectId)));
 				return $this->output(array(
 					'object' => array(
-						'id' => $this->getRequest()->getData('ObjectId')
+						'id' => $ObjectId
 					)
 				));
 			case 'getinteractionresults':
 				$results = array();
-				foreach ($this->getCoachingConfigurator()->getValues() as $UserInteraction) {
-					$results[$UserInteraction->getKey()] = array(
-						'data' => Json::decode($UserInteraction->getData('data')),
-						'value' => Json::decode($UserInteraction->getValue())
+				foreach ($this->getCoachingConfigurator()->getValues() as $key => $result) {
+					$results[$key] = array(
+						'data' => Json::decode($result['data']),
+						'value' => Json::decode($result['value'])
 					);
 				}
 				return $this->output($results);
 			case 'saveinteractionresults':
-				$data = Json::decode($this->getRequest()->getData('data'));
+				$data = (array)Json::decode($data);
+				foreach ($data as $key => $result) {
+					$result = (array)$result;
+					$data[$key] = array(
+						'data' => Json::encode($result['data']),
+						'value' => Json::encode($result['value'])
+					);
+				}
 				$this->getCoachingConfigurator()->setValues($data);
 				return $this->output(array(
 					'object' => array(
-						'id' => $this->getRequest()->getData('ObjectId')
+						'id' => $ObjectId
 					)
 				));
 		}
