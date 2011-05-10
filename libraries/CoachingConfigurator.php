@@ -20,7 +20,7 @@ class CoachingConfigurator extends Application {
 			'UserId' => $this->getUserId(),
 			'key' => $field
 		));
-		return $UserInteraction->getValue();
+		return Json::encode(Json::decode($UserInteraction->getValue()));
 	}
 	
 	public function setValues($values) {
