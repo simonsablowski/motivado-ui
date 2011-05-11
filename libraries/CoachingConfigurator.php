@@ -1,15 +1,11 @@
 <?php
 
 class CoachingConfigurator {
-	public $UserId = 1;
-	
-	public function __construct() {
-		
-	}
+	public $UserId;
 	
 	public function getValues() {
 		$values = array();
-		$q = mysql_query('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = ' . $this->UserId . ' ORDER BY `created` ASC');
+		$q = mysql_query('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = ' . mysql_real_escape_string($this->UserId) . ' ORDER BY `created` ASC');
 		while ($r = mysql_fetch_array($q)) {
 			$values[$r['key']] = array(
 				'data' => $r['data'],
@@ -22,7 +18,7 @@ class CoachingConfigurator {
 	public function getValue($field = NULL) {
 		if (is_null($field)) return $this->getValues();
 		
-		$q = mysql_query('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = ' . $this->UserId . ' AND `key` = \'' . $field . '\' ORDER BY `created` ASC LIMIT 1');
+		$q = mysql_query('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = ' . mysql_real_escape_string($this->UserId) . ' AND `key` = \'' . mysql_real_escape_string($field) . '\' ORDER BY `created` ASC LIMIT 1');
 		$r = mysql_fetch_array($q);
 		return $r ? $r['value'] : $r;
 	}
@@ -38,6 +34,6 @@ class CoachingConfigurator {
 	public function setValue($field, $value = NULL) {
 		if (is_null($value)) return $this->setValues($field);
 		
-		return mysql_query('INSERT INTO `motivado_ui`.`userinteraction` SET `UserId` = ' . $this->UserId . ', `key` = \'' . $field . '\', `data` = \'' . $value['data'] . '\', `value` = \'' . $value['value'] . '\'');
+		return mysql_query('INSERT INTO `motivado_ui`.`userinteraction` SET `UserId` = ' . mysql_real_escape_string($this->UserId) . ', `key` = \'' . mysql_real_escape_string($field) . '\', `data` = \'' . mysql_real_escape_string($value['data']) . '\', `value` = \'' . mysql_real_escape_string($value['value']) . '\'');
 	}
 }
