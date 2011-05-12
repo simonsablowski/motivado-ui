@@ -4,36 +4,111 @@ class CoachingConfigurator {
 	public $UserId;
 	
 	public function getValues() {
+		if ($sessionValues = $this->retrieveValuesFromSession()) {
+			return $sessionValues;
+		} else {
+			return $this->retrieveValuesFromDatabase();
+		}
+	}
+	
+	protected function retrieveValuesFromSession() {
+		if (isset($_SESSION['CoachingConfiguratorValues'])) {
+			return $_SESSION['CoachingConfiguratorValues'];
+		}
+	}
+	
+	protected function retrieveValuesFromDatabase() {
 		$values = array();
-		$q = mysql_query('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = ' . mysql_real_escape_string($this->UserId) . ' ORDER BY `created` ASC');
-		while ($r = mysql_fetch_array($q)) {
-			$values[$r['key']] = array(
-				'data' => $r['data'],
-				'value' => $r['value']
+		$query = sprintf('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = %d ORDER BY `created` ASC', mysql_real_escape_string($this->UserId));
+		while ($row = mysql_fetch_array(mysql_query($query))) {
+			$values[$row['key']] = array(
+				'data' => $row['data'],
+				'value' => $row['value']
 			);	
 		}
 		return $values;
 	}
 	
 	public function getValue($field = NULL) {
-		if (is_null($field)) return $this->getValues();
+		if (is_null($field)) {
+			return $this->getValues();
+		}
 		
-		$q = mysql_query('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = ' . mysql_real_escape_string($this->UserId) . ' AND `key` = \'' . mysql_real_escape_string($field) . '\' ORDER BY `created` ASC LIMIT 1');
-		$r = mysql_fetch_array($q);
-		return $r ? $r['value'] : $r;
+		if ($sessionValue = $this->retrieveValueFromSession($field)) {
+			return $sessionValue;
+		} else {
+			return $this->retrieveValueFromDatabase($field);
+		}
+	}
+	
+	protected function retrieveValueFromSession($field) {
+		if (isset($_SESSION['CoachingConfiguratorValues'][$field])) {
+			return $_SESSION['CoachingConfiguratorValues'][$field];
+		}
+	}
+	
+	protected function retrieveValueFromDatabase($field) {
+		$query = sprintf('SELECT * FROM `motivado_ui`.`userinteraction` WHERE `UserId` = %d AND `key` = \'%s\' ORDER BY `created` ASC LIMIT 1', mysql_real_escape_string($this->UserId), mysql_real_escape_string($field));
+		$row = mysql_fetch_array(mysql_query($query));
+		if (isset($row['value'])) {
+			return $row['value'];
+		}
+	}
+	
+	protected function mustSaveToDatabase() {
+		return !is_null($this->UserId);
 	}
 	
 	public function setValues($values) {
-		foreach ((array)$values as $field => $value) {
-			$this->setValue($field, (array)$value);
+		if (($sessionValues = $this->saveValuesToSession($values)) && $this->mustSaveToDatabase()) {
+			$this->saveValuesToDatabase($values);
 		}
 		
 		return $this->getValues();
 	}
 	
+	protected function saveValuesToSession($values) {
+		if (!isset($_SESSION['CoachingConfiguratorValues'])) {
+			return $_SESSION['CoachingConfiguratorValues'] = $values;
+		} else {
+			return $_SESSION['CoachingConfiguratorValues'] = array_merge($_SESSION['CoachingConfiguratorValues'], $values);
+		}
+	}
+	
+	protected function saveValuesToDatabase($values) {
+		$query = 'INSERT INTO `motivado_ui`.`userinteraction` (`UserId`, `key`, `data`, `value`) VALUES ';
+		$comma = FALSE;
+		foreach ($values as $field => $value) {
+			$query .= $comma ? ', ' : '';
+			$query .= sprintf('(%d, \'%s\', \'%s\', \'%s\')', mysql_real_escape_string($this->UserId), mysql_real_escape_string($field), mysql_real_escape_string($value['data']), mysql_real_escape_string($value['value']));
+			$comma = TRUE;
+		}
+		if ($comma) {
+			return mysql_query($query);
+		}
+	}
+	
 	public function setValue($field, $value = NULL) {
-		if (is_null($value)) return $this->setValues($field);
+		if (is_null($value)) {
+			return $this->setValues($field);
+		}
 		
+		if (($sessionValue = $this->saveValueToSession($field)) && !$this->mustSaveToDatabase()) {
+			return $sessionValue;
+		} else {
+			return $this->saveValueToDatabase($field);
+		}
+	}
+	
+	protected function saveValueToSession($field, $value) {
+		if (!isset($_SESSION['CoachingConfiguratorValues'])) {
+			$_SESSION['CoachingConfiguratorValues'] = array();
+		}
+		
+		return $_SESSION['CoachingConfiguratorValues'][$field] = $value;
+	}
+	
+	protected function saveValueToDatabase($field) {
 		return mysql_query('INSERT INTO `motivado_ui`.`userinteraction` SET `UserId` = ' . mysql_real_escape_string($this->UserId) . ', `key` = \'' . mysql_real_escape_string($field) . '\', `data` = \'' . mysql_real_escape_string($value['data']) . '\', `value` = \'' . mysql_real_escape_string($value['value']) . '\'');
 	}
 }
