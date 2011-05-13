@@ -76,11 +76,16 @@ class CoachingConfigurator {
 	}
 	
 	protected function saveValuesToDatabase($values) {
-		$query = 'INSERT INTO `motivado_ui`.`userinteraction` (`UserId`, `key`, `data`, `value`) VALUES ';
+		$query = 'INSERT INTO `motivado_ui`.`userinteraction` (`UserId`, `key`, `data`, `value`, `created`) VALUES ';
 		$comma = FALSE;
 		foreach ($values as $field => $value) {
 			$query .= $comma ? ', ' : '';
-			$query .= sprintf('(%d, \'%s\', \'%s\', \'%s\')', mysql_real_escape_string($this->UserId), mysql_real_escape_string($field), mysql_real_escape_string($value['data']), mysql_real_escape_string($value['value']));
+			$query .= sprintf('(%d, \'%s\', \'%s\', \'%s\', NOW())',
+				mysql_real_escape_string($this->UserId),
+				mysql_real_escape_string($field),
+				mysql_real_escape_string($value['data']),
+				mysql_real_escape_string($value['value'])
+			);
 			$comma = TRUE;
 		}
 		if ($comma) {
@@ -109,6 +114,12 @@ class CoachingConfigurator {
 	}
 	
 	protected function saveValueToDatabase($field) {
-		return mysql_query('INSERT INTO `motivado_ui`.`userinteraction` SET `UserId` = ' . mysql_real_escape_string($this->UserId) . ', `key` = \'' . mysql_real_escape_string($field) . '\', `data` = \'' . mysql_real_escape_string($value['data']) . '\', `value` = \'' . mysql_real_escape_string($value['value']) . '\'');
+		$query = sprintf('INSERT INTO `motivado_ui`.`userinteraction` (`UserId`, `key`, `data`, `value`, `created`) VALUES (%d, \'%s\', \'%s\', \'%s\', NOW())',
+			mysql_real_escape_string($this->UserId),
+			mysql_real_escape_string($field),
+			mysql_real_escape_string($value['data']),
+			mysql_real_escape_string($value['value'])
+		);
+		return mysql_query($query);
 	}
 }
