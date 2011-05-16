@@ -7,7 +7,7 @@ class CoachingConfigurator {
 		if ($sessionValues = $this->retrieveValuesFromSession()) {
 			return $sessionValues;
 		} else {
-			return $this->retrieveValuesFromDatabase();
+			return $this->saveValuesToSession($this->retrieveValuesFromDatabase());
 		}
 	}
 	
@@ -38,7 +38,7 @@ class CoachingConfigurator {
 		if ($sessionValue = $this->retrieveValueFromSession($field)) {
 			return $sessionValue;
 		} else {
-			return $this->retrieveValueFromDatabase($field);
+			return $this->saveValueToSession($field, $this->retrieveValueFromDatabase($field));
 		}
 	}
 	
