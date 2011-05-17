@@ -70,7 +70,7 @@ class CoachingConfigurator {
 			$this->saveValuesToDatabase($values);
 		}
 		
-		return $this->getValues();
+		return $values;
 	}
 	
 	protected function saveValuesToSession($values) {
