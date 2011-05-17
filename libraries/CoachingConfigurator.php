@@ -61,7 +61,11 @@ class CoachingConfigurator {
 		return !is_null($this->UserId);
 	}
 	
-	public function setValues($values) {
+	public function setValues($values = NULL) {
+		if (is_null($values)) {
+			$values = $this->getValues();
+		}
+		
 		if (($sessionValues = $this->saveValuesToSession($values)) && $this->mustSaveToDatabase()) {
 			$this->saveValuesToDatabase($values);
 		}
