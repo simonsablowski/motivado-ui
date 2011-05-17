@@ -119,7 +119,7 @@ class CoachingConfigurator {
 		return $_SESSION['CoachingConfiguratorValues'][$field] = $value;
 	}
 	
-	protected function saveValueToDatabase($field) {
+	protected function saveValueToDatabase($field, $value) {
 		$query = sprintf('INSERT INTO `motivado_ui`.`userinteraction` (`UserId`, `key`, `data`, `value`, `created`) VALUES (%d, \'%s\', \'%s\', \'%s\', NOW())',
 			mysql_real_escape_string($this->UserId),
 			mysql_real_escape_string($field),
