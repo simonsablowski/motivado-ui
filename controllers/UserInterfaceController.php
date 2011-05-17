@@ -38,7 +38,7 @@ class UserInterfaceController extends Controller {
 	public function extendCoachingHistory($CoachingKey, $ObjectId) {
 		$this->setupApi();
 		
-		$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $CoachingKey, $ObjectId));
+		$this->getApi()->extendCoachingHistory($CoachingKey, $ObjectId);
 		
 		return $this->output(array(
 			'object' => array(
