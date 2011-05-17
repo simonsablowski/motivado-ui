@@ -104,10 +104,10 @@ class CoachingConfigurator {
 			return $this->setValues($field);
 		}
 		
-		if (($sessionValue = $this->saveValueToSession($field)) && !$this->mustSaveToDatabase()) {
+		if (($sessionValue = $this->saveValueToSession($field, $value)) && !$this->mustSaveToDatabase()) {
 			return $sessionValue;
 		} else {
-			return $this->saveValueToDatabase($field);
+			return $this->saveValueToDatabase($field, $value);
 		}
 	}
 	
