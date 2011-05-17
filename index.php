@@ -8,4 +8,4 @@ foreach ($configuration['includeDirectories'] as $includeDirectory) {
 }
 
 $Application = new Application($configuration, isset($_GET['localization']) ? $_GET['localization'] : NULL);
-$Application->run(sprintf('UserInterface/query/%s', isset($_GET['query']) ? $_GET['query'] : NULL));
+$Application->run(sprintf('UserInterface/%s', isset($_GET['query']) ? $_GET['query'] : NULL));

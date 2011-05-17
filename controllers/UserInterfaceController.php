@@ -29,48 +29,55 @@ class UserInterfaceController extends Controller {
 		print Json::format(Json::encode($data));
 	}
 	
-	public function query($method) {
-		$this->setupCoachingConfigurator();
+	public function query($CoachingKey) {
 		$this->setupApi();
 		
-		$CoachingKey = $this->getRequest()->getData('CoachingKey');
-		$ObjectId = $this->getRequest()->getData('ObjectId');
-		$data = $this->getRequest()->getData('data');
+		return $this->getApi()->query($CoachingKey);
+	}
+	
+	public function extendCoachingHistory($CoachingKey, $ObjectId) {
+		$this->setupApi();
 		
-		switch (strtolower($method)) {
-			case 'query':
-				return $this->getApi()->query($CoachingKey);
-			case 'extendcoachinghistory':
-				$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $CoachingKey, $ObjectId));
-				return $this->output(array(
-					'object' => array(
-						'id' => $ObjectId
-					)
-				));
-			case 'getinteractionresults':
-				$results = array();
-				foreach ($this->getCoachingConfigurator()->getValues() as $key => $result) {
-					$results[$key] = array(
-						'data' => Json::decode($result['data']),
-						'value' => Json::decode($result['value'])
-					);
-				}
-				return $this->output($results);
-			case 'saveinteractionresults':
-				$data = (array)Json::decode($data);
-				foreach ($data as $key => $result) {
-					$result = (array)$result;
-					$data[$key] = array(
-						'data' => Json::encode($result['data']),
-						'value' => Json::encode($result['value'])
-					);
-				}
-				$this->getCoachingConfigurator()->setValues($data);
-				return $this->output(array(
-					'object' => array(
-						'id' => $ObjectId
-					)
-				));
+		$this->getApi()->run(sprintf('Coaching/extendCoachingHistory/%s/%d', $CoachingKey, $ObjectId));
+		
+		return $this->output(array(
+			'object' => array(
+				'id' => $ObjectId
+			)
+		));
+	}
+	
+	public function getInteractionResults() {
+		$this->setupCoachingConfigurator();
+		
+		$results = array();
+		foreach ($this->getCoachingConfigurator()->getValues() as $key => $result) {
+			$results[$key] = array(
+				'data' => Json::decode($result['data']),
+				'value' => Json::decode($result['value'])
+			);
 		}
+		
+		return $this->output($results);
+	}
+	
+	public function saveInteractionResults($ObjectId) {
+		$this->setupCoachingConfigurator();
+		
+		$data = (array)Json::decode($this->getRequest()->getData('data'));
+		foreach ($data as $key => $result) {
+			$result = (array)$result;
+			$data[$key] = array(
+				'data' => Json::encode($result['data']),
+				'value' => Json::encode($result['value'])
+			);
+		}
+		$this->getCoachingConfigurator()->setValues($data);
+		
+		return $this->output(array(
+			'object' => array(
+				'id' => $ObjectId
+			)
+		));
 	}
 }
