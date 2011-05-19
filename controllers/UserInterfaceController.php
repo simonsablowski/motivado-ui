@@ -29,10 +29,10 @@ class UserInterfaceController extends Controller {
 		print Json::format(Json::encode($data));
 	}
 	
-	public function query($CoachingKey) {
+	public function query($CoachingKey, $initial = TRUE) {
 		$this->setupApi();
 		
-		return $this->getApi()->query($CoachingKey);
+		return $this->getApi()->query($CoachingKey, (bool)$initial);
 	}
 	
 	public function extendCoachingHistory($CoachingKey, $ObjectId) {
