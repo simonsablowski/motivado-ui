@@ -16,7 +16,7 @@ class UserInterfaceController extends Controller {
 	}
 	
 	protected function setupApi() {
-		$this->setApi(new Api($this->getApiConfiguration()));
+		$this->setApi(new \Motivado\Api\Api($this->getApiConfiguration()));
 		$this->getApi()->setSession($this->getSession());
 	}
 	
@@ -26,7 +26,7 @@ class UserInterfaceController extends Controller {
 	}
 	
 	protected function output($data) {
-		print Json::format(Json::encode($data));
+		print \Motivado\Api\Json::format(Json::encode($data));
 	}
 	
 	public function query($CoachingKey, $initial = TRUE) {
@@ -53,8 +53,8 @@ class UserInterfaceController extends Controller {
 		$results = array();
 		foreach ($this->getCoachingConfigurator()->getValues() as $key => $result) {
 			$results[$key] = array(
-				'data' => Json::decode($result['data']),
-				'value' => Json::decode($result['value'])
+				'data' => \Motivado\Api\Json::decode($result['data']),
+				'value' => \Motivado\Api\Json::decode($result['value'])
 			);
 		}
 		
@@ -64,12 +64,12 @@ class UserInterfaceController extends Controller {
 	public function saveInteractionResults($ObjectId) {
 		$this->setupCoachingConfigurator();
 		
-		$data = (array)Json::decode($this->getRequest()->getData('data'));
+		$data = (array)\Motivado\Api\Json::decode($this->getRequest()->getData('data'));
 		foreach ($data as $key => $result) {
 			$result = (array)$result;
 			$data[$key] = array(
-				'data' => Json::encode($result['data']),
-				'value' => Json::encode($result['value'])
+				'data' => \Motivado\Api\Json::encode($result['data']),
+				'value' => \Motivado\Api\Json::encode($result['value'])
 			);
 		}
 		$this->getCoachingConfigurator()->setValues($data);
