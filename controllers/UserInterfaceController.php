@@ -26,7 +26,7 @@ class UserInterfaceController extends Controller {
 	}
 	
 	protected function output($data) {
-		print \Motivado\Api\Json::format(Json::encode($data));
+		print \Motivado\Api\Json::format(\Motivado\Api\Json::encode($data));
 	}
 	
 	public function query($CoachingKey, $initial = TRUE) {
