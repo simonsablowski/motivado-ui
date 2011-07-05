@@ -22,7 +22,9 @@ class UserInterfaceController extends Controller {
 	
 	protected function setupCoachingConfigurator() {
 		$this->setCoachingConfigurator(new CoachingConfigurator);
-		$this->getCoachingConfigurator()->UserId = 1;
+		if ($this->getConfiguration('simulateUser')) {
+			$this->getCoachingConfigurator()->UserId = 1;
+		}
 	}
 	
 	protected function output($data) {

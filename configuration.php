@@ -19,3 +19,5 @@ $configuration['Database'] = array(
 );
 
 $configuration['debugMode'] = TRUE;
+
+$configuration['simulateUser'] = TRUE;
