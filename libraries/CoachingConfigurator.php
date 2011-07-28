@@ -59,7 +59,7 @@ class CoachingConfigurator {
 	}
 	
 	public function setValues($values = NULL) {
-		if (is_null($values)) {
+		if (empty($values)) {
 			$values = $this->getValues();
 		}
 		
