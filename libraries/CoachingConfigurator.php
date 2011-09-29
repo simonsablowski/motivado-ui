@@ -19,10 +19,13 @@ class CoachingConfigurator {
 	
 	protected function retrieveValuesFromDatabase() {
 		$values = array();
-		$query = sprintf('SELECT `data`, `value` FROM `motivado_ui`.`userinteraction` WHERE `UserId` = %d ORDER BY `created` ASC', mysql_real_escape_string($this->UserId));
+		$query = sprintf('SELECT `key`, `data`, `value` FROM `motivado_ui`.`userinteraction` WHERE `UserId` = %d ORDER BY `created` ASC', mysql_real_escape_string($this->UserId));
 		$result = mysql_query($query);
 		while ($row = mysql_fetch_assoc($result)) {
-			$values[$row['key']] = $row;	
+			$values[$row['key']] = array(
+				'data' => $row['data'],
+				'value' => $row['value']
+			);
 		}
 		return $values;
 	}
