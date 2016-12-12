@@ -1,7 +1,5 @@
 RewriteEngine on
 
-RewriteBase /motivado-ui
-
 RewriteRule ^$ index.php [L,QSA]
 
 RewriteCond $1 !^robots\.txt
